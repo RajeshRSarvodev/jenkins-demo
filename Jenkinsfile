@@ -45,7 +45,7 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Scanning Docker image for vulnerabilities..."
-                bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 jenkins-demo:%BUILD_NUMBER%'
+                bat 'C:\\trivy\\trivy.exe image --severity HIGH,CRITICAL --exit-code 1 jenkins-demo:%BUILD_NUMBER%'
             }
         }
 
