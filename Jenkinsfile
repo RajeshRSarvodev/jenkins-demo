@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+	environment {
+	     APP_NAME ='jenkins-demo'
+	}
+
     parameters {
         choice(
             name: 'ENVIRONMENT',
@@ -13,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Building application..."
+                echo "Building ${APP_NAME}..."
             }
         }
 
@@ -22,22 +26,25 @@ pipeline {
                 echo "Running tests..."
             }
         }
-	
-	stage('Package') {
-    steps {
-        echo "Packaging application..."
-        bat 'if not exist build mkdir build'
-        bat 'echo Jenkins build artifact > build\\app.txt'
-    		}
-	}
 
-  	
-
-
-        stage('Deploy') {
+        stage('Package') {
             steps {
-                echo "Deploying to ${params.ENVIRONMENT}"
+                echo "Packaging application..."
+                bat 'if not exist build mkdir build'
+                bat 'echo Jenkins build artifact > build\\app.txt'
             }
         }
+	
+	stage('Deploy') {
+    when {
+        expression {
+            params.ENVIRONMENT != 'production'
+        }
     }
+    steps {
+        echo "Deploying ${APP_NAME} to ${params.ENVIRONMENT}"
+    }
+}
+   
+}
 }
