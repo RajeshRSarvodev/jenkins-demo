@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-	environment {
-	     APP_NAME ='jenkins-demo'
-	}
+    environment {
+        APP_NAME = 'jenkins-demo'
+    }
 
     parameters {
         choice(
@@ -34,17 +34,22 @@ pipeline {
                 bat 'echo Jenkins build artifact > build\\app.txt'
             }
         }
-	
-	stage('Deploy') {
-    when {
-        expression {
-            params.ENVIRONMENT != 'production'
+
+        stage('Deploy') {
+            when {
+                expression {
+                    params.ENVIRONMENT != 'production'
+                }
+            }
+            steps {
+                echo "Deploying ${APP_NAME} to ${params.ENVIRONMENT}"
+            }
         }
     }
-    steps {
-        echo "Deploying ${APP_NAME} to ${params.ENVIRONMENT}"
+
+    post {
+        success {
+            archiveArtifacts artifacts: 'build/**', fingerprint: true
+        }
     }
-}
-   
-}
 }
