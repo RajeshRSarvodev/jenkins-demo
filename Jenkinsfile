@@ -23,6 +23,22 @@ pipeline {
             }
         }
 
+  	stage('Credentials Test') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'demo-credentials',
+                        usernameVariable: 'DEMO_USER',
+                        passwordVariable: 'DEMO_PASSWORD'
+                    )
+                ]) {
+                    echo "Credential username is: ${DEMO_USER}"
+                    echo "Credential password is: ${DEMO_PASSWORD}"
+                }
+            }
+        }
+
+
         stage('Deploy') {
             steps {
                 echo "Deploying to ${params.ENVIRONMENT}"
