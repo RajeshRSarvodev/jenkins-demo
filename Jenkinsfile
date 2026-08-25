@@ -26,19 +26,19 @@ pipeline {
                 echo "Running tests..."
             }
         }
-	
-	stage('Docker Check') {
-   	 steps {
-        bat 'docker --version'
-        bat 'docker info'
-    }
-}
 
         stage('Package') {
             steps {
                 echo "Packaging application..."
                 bat 'if not exist build mkdir build'
                 bat 'echo Jenkins build artifact > build\\app.txt'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo "Building Docker image..."
+                bat 'docker build -t jenkins-demo:%BUILD_NUMBER% .'
             }
         }
 
