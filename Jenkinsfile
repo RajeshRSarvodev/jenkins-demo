@@ -41,6 +41,13 @@ pipeline {
                 bat 'docker build -t jenkins-demo:%BUILD_NUMBER% .'
             }
         }
+	
+	stage('Security Scan') {	
+		Steps {
+			echo "Scanning Docker Image for vulnerabilities..."
+			bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 jenkins-demo:%				BUILD_NUMBER'
+		}
+}
 
         stage('Deploy') {
             when {
