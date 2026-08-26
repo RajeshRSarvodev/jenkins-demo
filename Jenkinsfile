@@ -30,6 +30,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo "Packaging application..."
+
                 bat 'if not exist build mkdir build'
                 bat 'echo Jenkins build artifact > build\\app.txt'
             }
@@ -38,18 +39,47 @@ pipeline {
         stage('Docker Build') {
             steps {
                 echo "Building Docker image..."
+
                 bat 'docker build -t jenkins-demo:%BUILD_NUMBER% .'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Dev/Staging') {
             when {
                 expression {
                     params.ENVIRONMENT != 'production'
                 }
             }
+
             steps {
                 echo "Deploying ${APP_NAME} to ${params.ENVIRONMENT}"
+            }
+        }
+
+        stage('Production Approval') {
+            when {
+                expression {
+                    params.ENVIRONMENT == 'production'
+                }
+            }
+
+            steps {
+                input(
+                    message: 'Approve deployment to PRODUCTION?',
+                    ok: 'Deploy to Production'
+                )
+            }
+        }
+
+        stage('Production Deploy') {
+            when {
+                expression {
+                    params.ENVIRONMENT == 'production'
+                }
+            }
+
+            steps {
+                echo "Deploying ${APP_NAME} to production"
             }
         }
     }
