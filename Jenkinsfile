@@ -22,11 +22,10 @@ pipeline {
         }
 
         stage('Test') {
-   	 steps {
-        echo "Running tests..."
-        
-    		}
-	}
+            steps {
+                echo "Running tests..."
+            }
+        }
 
         stage('Package') {
             steps {
@@ -83,23 +82,24 @@ pipeline {
                 echo "Deploying ${APP_NAME} to production"
             }
         }
-    }	
+    }
 
     post {
-    always {
-        echo "Pipeline finished."
-    }
+        always {
+            echo "Pipeline finished."
+        }
 
-    success {
-        echo "Pipeline completed successfully."
-        archiveArtifacts artifacts: 'build/**', fingerprint: true
-    }
+        success {
+            echo "Pipeline completed successfully."
+            archiveArtifacts artifacts: 'build/**', fingerprint: true
+        }
 
-    failure {
-        echo "Pipeline FAILED."
-    }
+        failure {
+            echo "Pipeline FAILED."
+        }
 
-    cleanup {
-        echo "Cleanup completed."
+        cleanup {
+            echo "Cleanup completed."
+        }
     }
 }
