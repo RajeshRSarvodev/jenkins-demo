@@ -22,10 +22,11 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                echo "Running tests..."
-            }
-        }
+   	 steps {
+        echo "Running tests..."
+        bat 'exit /b 1'
+    		}
+	}
 
         stage('Package') {
             steps {
@@ -85,8 +86,20 @@ pipeline {
     }
 
     post {
-        success {
-            archiveArtifacts artifacts: 'build/**', fingerprint: true
-        }
+    always {
+        echo "Pipeline finished."
+    }
+
+    success {
+        echo "Pipeline completed successfully."
+        archiveArtifacts artifacts: 'build/**', fingerprint: true
+    }
+
+    failure {
+        echo "Pipeline FAILED."
+    }
+
+    cleanup {
+        echo "Cleanup completed."
     }
 }
