@@ -24,7 +24,7 @@ pipeline {
         stage('Test') {
    	 steps {
         echo "Running tests..."
-        bat 'exit /b 1'
+        
     		}
 	}
 
@@ -83,7 +83,7 @@ pipeline {
                 echo "Deploying ${APP_NAME} to production"
             }
         }
-    }
+    }	
 
     post {
     always {
