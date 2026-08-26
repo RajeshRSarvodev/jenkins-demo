@@ -1,6 +1,15 @@
 pipeline {
     agent any
 
+
+
+    options {
+        timestamps()
+        timeout(time: 10, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+
+
     environment {
         APP_NAME = 'jenkins-demo'
     }
